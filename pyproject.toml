@@ -28,6 +28,7 @@ dependencies = [
     "scipy",
     "jupyter",
     "matplotlib",
+    "kagglehub",
 ]
 
 # mypy
