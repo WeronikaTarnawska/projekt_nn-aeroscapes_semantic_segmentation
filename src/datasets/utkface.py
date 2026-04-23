@@ -24,7 +24,8 @@ class UTKFaceDataset(Dataset):
         self.transform = transform
 
         self._image_list = [
-            path for path in self.data_dir.glob("*.jpg")
+            path
+            for path in self.data_dir.glob("*.jpg")
             if self._is_valid_filename(path)
         ]
 
@@ -94,10 +95,31 @@ class UTKFaceDataModule(L.LightningDataModule):
         )
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, self.batch_size, shuffle=True, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.train_dataset,
+            self.batch_size,
+            shuffle=True,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, self.batch_size, shuffle=False, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.val_dataset,
+            self.batch_size,
+            shuffle=False,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, self.batch_size, shuffle=False, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.test_dataset,
+            self.batch_size,
+            shuffle=False,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )
