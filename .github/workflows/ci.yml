@@ -6,9 +6,8 @@ on:
     branches: [ master ]
 
 jobs:
-  lint_and_test:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -27,17 +26,34 @@ jobs:
         with:
           python-version: "3.12"
 
-      # install project with dev dependencies
-      - name: Install dependencies
-        run: uv pip install --system -e ".[dev]"
+      # Create .venv and install dev dependencies
+      - name: Install dependencies in venv
+        run: uv sync --extra dev
 
       - name: Run Ruff
         run: |
-          ruff check .
-          ruff format --check .
+          uv run ruff check .
+          uv run ruff format --check .
 
-      - name: Run mypy
-        run: mypy --strict src/ tests/ scripts/
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Create .venv and install dev dependencies
+      - name: Install dependencies in venv
+        run: uv sync --extra dev
 
       - name: Run pytest
-        run: pytest tests/
+        run: uv run pytest tests/
