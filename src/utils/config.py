@@ -15,6 +15,7 @@ def parse_fiddle_config(config_path: str) -> fdl.Config:
 
     return config()
 
+
 def get_wandb_config(run_path: str, artifact_type: str = "config") -> fdl.Config:
     api = wandb.Api()
     run = api.run(run_path)
