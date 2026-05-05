@@ -71,7 +71,9 @@ class MNISTDataModule(L.LightningDataModule):
         )
         n_val = int(len(train_dataset) * val_split)
         n_train = len(train_dataset) - n_val
-        self.train_dataset, self.val_dataset = random_split(train_dataset, [n_train, n_val])
+        self.train_dataset, self.val_dataset = random_split(
+            train_dataset, [n_train, n_val]
+        )
 
         self.test_dataset = MNISTDataset(
             data_dir / "t10k-images.idx3-ubyte",
@@ -79,10 +81,31 @@ class MNISTDataModule(L.LightningDataModule):
         )
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, self.batch_size, shuffle=True, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.train_dataset,
+            self.batch_size,
+            shuffle=True,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, self.batch_size, shuffle=False, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.val_dataset,
+            self.batch_size,
+            shuffle=False,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, self.batch_size, shuffle=False, num_workers=8, pin_memory=True, persistent_workers=True)
+        return DataLoader(
+            self.test_dataset,
+            self.batch_size,
+            shuffle=False,
+            num_workers=8,
+            pin_memory=True,
+            persistent_workers=True,
+        )

@@ -18,7 +18,7 @@ def build_config() -> fdl.Config[ExperimentConfig]:
         input_shape=(1, 28, 28),
         channel_dims=[32, 64],
         output_dim=embed_dim,
-        dropout=0.,
+        dropout=0.0,
     )
 
     data_module = fdl.Config(
@@ -61,5 +61,5 @@ def build_config() -> fdl.Config[ExperimentConfig]:
             checkpoints_callback,
             max_epochs,
             callbacks=[],
-        )
+        ),
     )

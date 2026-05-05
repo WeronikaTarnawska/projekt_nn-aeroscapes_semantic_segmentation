@@ -64,5 +64,5 @@ def build_config() -> fdl.Config[ExperimentConfig]:
             checkpoints_callback,
             max_epochs,
             callbacks=[],
-        )
+        ),
     )
