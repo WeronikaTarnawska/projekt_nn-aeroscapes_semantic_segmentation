@@ -1,2 +1,2 @@
-WANDB_ENTITY = "<entity_name>"
-WANDB_PROJECT = "<project_name>"
+WANDB_ENTITY = "adrian-walczak119-iiuwr"
+WANDB_PROJECT = "aeroscapes-semantic-segmentation"

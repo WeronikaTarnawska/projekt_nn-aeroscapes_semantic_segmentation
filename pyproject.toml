@@ -25,12 +25,17 @@ dependencies = [
     "torch",
     "torchvision",
     "lightning",
+    "torchmetrics",
     "click",
     "wandb",
     "fiddle",
     "scipy",
     "jupyter",
     "matplotlib",
+    "seaborn",
+    "pandas",
+    "Pillow",
+    "tqdm",
     "kagglehub",
 ]
 
