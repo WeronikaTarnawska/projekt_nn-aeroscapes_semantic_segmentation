@@ -2,3 +2,10 @@ tmp/
 data
 venv/
 __pycache__/
+wandb/*
+*.ckpt
+
+# uv cache and venvs
+.venv
+.venv-*
+.uv-cache/

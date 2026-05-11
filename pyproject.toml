@@ -22,8 +22,11 @@ classifiers = [
 ]
 
 dependencies = [
-    "torch",
-    "torchvision",
+    # Linux GPU builds: install from pytorch-cu121 (matches driver CUDA 12.x).
+    # Default PyPI torch on Linux targets newer CUDA toolkits (cu13) and triggers
+    # "driver too old" on lab machines with 535.xx / CUDA 12.2-capable drivers.
+    "torch==2.5.1",
+    "torchvision==0.20.1",
     "lightning",
     "torchmetrics",
     "click",
@@ -38,6 +41,19 @@ dependencies = [
     "tqdm",
     "kagglehub",
 ]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu121", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+    { index = "pytorch-cu121", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
 
 [project.optional-dependencies]
 dev = ["ruff", "pytest"]
