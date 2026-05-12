@@ -17,7 +17,7 @@ from src.utils.callbacks import LogPredictionsCallback
 
 
 def build_config() -> fdl.Config[ExperimentConfig]:
-    max_epochs = 40
+    max_epochs = 2000
 
     architecture = fdl.Config(
         MLPSegmentationBaseline,

@@ -174,7 +174,10 @@ def main(
         logger.append(wandb_logger)
 
         if epochs is not None:
-            wandb_logger.experiment.config.update({"max_epochs": max_epochs})
+            wandb_logger.experiment.config.update(
+                {"max_epochs": max_epochs},
+                allow_val_change=True
+            )
 
         # Config is only uploaded on new runs — it was already uploaded during the original run.
         if config_path is not None and resume_run_name is None and ckpt_path is None:
