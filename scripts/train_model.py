@@ -86,7 +86,9 @@ def main(
             "--resume-latest cannot be used with --resume_run_name (that run already fixes the log directory)."
         )
     if resume_latest and not config_path:
-        raise click.UsageError("--resume-latest requires CONFIG_PATH (same experiment config as before).")
+        raise click.UsageError(
+            "--resume-latest requires CONFIG_PATH (same experiment config as before)."
+        )
 
     ckpt_path: str | None = ckpt
 
@@ -124,7 +126,9 @@ def main(
         cfg = parse_fiddle_config(config_path)
     elif ckpt_path is not None:
         if not config_path:
-            raise click.UsageError("--ckpt requires CONFIG_PATH (same experiment config as before).")
+            raise click.UsageError(
+                "--ckpt requires CONFIG_PATH (same experiment config as before)."
+            )
         # Local resume: keep writing checkpoints next to the loaded file.
         p = Path(ckpt_path)
         log_dir = str(p.parent)
@@ -132,7 +136,9 @@ def main(
         cfg = parse_fiddle_config(config_path)
     else:
         if not config_path:
-            raise click.UsageError("CONFIG_PATH is required unless --resume_run_name is set.")
+            raise click.UsageError(
+                "CONFIG_PATH is required unless --resume_run_name is set."
+            )
         # Config files are Python modules that must be imported dynamically —
         # parse_fiddle_config handles this.
         cfg = parse_fiddle_config(config_path)
@@ -141,9 +147,7 @@ def main(
         log_dir = f"logs/{run_name}"
 
     built_cfg: ExperimentConfig = fdl.build(cfg)
-    max_epochs = (
-        built_cfg.training_cfg.max_epochs if epochs is None else epochs
-    )
+    max_epochs = built_cfg.training_cfg.max_epochs if epochs is None else epochs
     # model is a LightningModule — it encapsulates the architecture, loss function,
     # optimizer, and train/val/test step logic, keeping this script model-agnostic.
     model: L.LightningModule = built_cfg.model
@@ -175,8 +179,7 @@ def main(
 
         if epochs is not None:
             wandb_logger.experiment.config.update(
-                {"max_epochs": max_epochs},
-                allow_val_change=True
+                {"max_epochs": max_epochs}, allow_val_change=True
             )
 
         # Config is only uploaded on new runs — it was already uploaded during the original run.
