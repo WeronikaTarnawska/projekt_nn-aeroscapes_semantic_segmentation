@@ -20,8 +20,12 @@ class SegmentationModel(L.LightningModule):
         num_classes:       Number of target classes.
         class_weights:     Per-class CE weights (e.g. median-frequency from EDA).
                            Accepts list/tuple of floats (Fiddle-friendly) or a
-                           torch.Tensor; None disables weighting.
+                           torch.Tensor; None disables weighting. Ignored when a
+                           `criterion` is supplied (the criterion owns weighting).
         ignore_index:      Class index excluded from loss and metrics (e.g. background).
+        criterion:         Optional loss module mapping (logits, masks) -> scalar
+                           (e.g. DiceCELoss). When None, falls back to weighted
+                           cross-entropy using `class_weights`/`ignore_index`.
         lr:                Learning rate.
         weight_decay:      Optimizer weight decay.
         optimizer_cls:     Torch optimizer class.
@@ -35,6 +39,7 @@ class SegmentationModel(L.LightningModule):
         num_classes: int,
         class_weights: list[float] | tuple[float, ...] | torch.Tensor | None = None,
         ignore_index: int | None = None,
+        criterion: nn.Module | None = None,
         lr: float = 1e-3,
         weight_decay: float = 1e-4,
         optimizer_cls: type[torch.optim.Optimizer] = torch.optim.AdamW,
@@ -44,6 +49,9 @@ class SegmentationModel(L.LightningModule):
         super().__init__()
         self.model = model
         self.num_classes = num_classes
+        # Registered as a child module so Lightning moves its buffers (e.g. the
+        # Dice/CE class weights) to the right device automatically.
+        self.criterion = criterion
         self.lr = lr
         self.weight_decay = weight_decay
         self.optimizer_cls = optimizer_cls
@@ -80,9 +88,12 @@ class SegmentationModel(L.LightningModule):
         images, attributes = batch
         masks = attributes["mask"]
         logits = self(images)
-        loss = F.cross_entropy(
-            logits, masks, weight=self.class_weights, ignore_index=self._ce_ignore
-        )
+        if self.criterion is not None:
+            loss = self.criterion(logits, masks)
+        else:
+            loss = F.cross_entropy(
+                logits, masks, weight=self.class_weights, ignore_index=self._ce_ignore
+            )
         preds = logits.argmax(dim=1)
 
         metrics: MetricCollection = getattr(self, f"{stage}_metrics")
