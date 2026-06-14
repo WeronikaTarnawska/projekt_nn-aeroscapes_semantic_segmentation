@@ -193,7 +193,12 @@ class AeroScapesDataModule(L.LightningDataModule):
             self.val_dataset = AeroScapesDataset(self.data_dir, "val", self._eval_tf)
 
     def _loader(
-        self, dataset: Dataset, *, batch_size: int, shuffle: bool
+        self,
+        dataset: Dataset,
+        *,
+        batch_size: int,
+        shuffle: bool,
+        drop_last: bool = False,
     ) -> DataLoader:
         return DataLoader(
             dataset,
@@ -202,16 +207,26 @@ class AeroScapesDataModule(L.LightningDataModule):
             num_workers=self.num_workers,
             pin_memory=True,
             persistent_workers=self.num_workers > 0,
+            drop_last=drop_last,
         )
 
     def train_dataloader(self) -> DataLoader:
         assert self.train_dataset is not None, "call setup() before train_dataloader()"
+        # drop_last=True: train has 2621 images, so some batch sizes leave a
+        # remainder of 1. A size-1 batch crashes DeepLabV3's ASPP global-pooling
+        # BatchNorm ("Expected more than 1 value per channel when training"), so
+        # drop the partial final batch (one image/epoch — negligible).
         return self._loader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=True
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            drop_last=True,
         )
 
     def val_dataloader(self) -> DataLoader:
         assert self.val_dataset is not None, "call setup() before val_dataloader()"
+        # No drop_last: eval runs BatchNorm with running stats, so a size-1 batch
+        # is fine — and we want every val image counted in the metrics.
         return self._loader(
             self.val_dataset, batch_size=self.val_batch_size, shuffle=False
         )
