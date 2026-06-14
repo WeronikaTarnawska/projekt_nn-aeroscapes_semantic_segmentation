@@ -9,3 +9,6 @@ wandb/*
 .venv
 .venv-*
 .uv-cache/
+
+# irrelevant docs 
+docs/proposal_solutions/
