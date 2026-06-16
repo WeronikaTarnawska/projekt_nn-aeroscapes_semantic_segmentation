@@ -14,6 +14,7 @@ theme:
   override:
   max_rows_alignment: center
 ---
+<!-- markdownlint-disable -->
 
 Segmentacja semantyczna w AeroScapes
 ===
