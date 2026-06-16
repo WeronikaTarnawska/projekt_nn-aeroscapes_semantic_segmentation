@@ -141,7 +141,7 @@ Wyniki - mIoU w kolejnych epokach
 
 ![width:100%](./tmp/1_val_miou_per_epoch.png)
 
-Wyniki - loss walidacyjny
+Wyniki - validation loss
 ===
 
 ![width:100%](./tmp/2_val_loss_noise.png)
@@ -190,3 +190,9 @@ Podsumowanie
 - metody A i B osiągają najlepsze wyniki dla różnych klas, co sugeruje potencjał ich połączenia
 
 - końcowy model poprawił wynik baseline'u o **3.7 punktu procentowego mIoU** przy zachowaniu tej samej architektury bazowej
+
+
+Repo
+===
+
+https://github.com/WeronikaTarnawska/projekt_nn-aeroscapes_semantic_segmentation
